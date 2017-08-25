@@ -1,2 +1,2 @@
 # totem-v3
-Totem V3 components and provisioning
+Totem V3 components, provisioning and documentation
