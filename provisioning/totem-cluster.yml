@@ -33,18 +33,29 @@ Parameters:
   EcsSecurityGroups:
     Description: ECS Security Groups
     Type: List<AWS::EC2::SecurityGroup::Id>
-    Default: 'default'
 
-  InstanceProfile:
-    Description: EC2 instance profile
+  EnvironmentStack:
+    Description: Name of totem environment stack
     Type: String
     MinLength: 1
+    Default: 'totem-environment'
 
+  StackVersion:
+    Description: Version of the current stack
+    Type: String
+    MinLength: 1
+    Default: '1.0.0'
+
+  Environment:
+    Description: Environment for the current stack (for tagging)
+    Type: String
+    MinLength: 1
+    Default: 'development'
 
 Mappings:
   AWSRegionToAMI:
     us-west-2:
-      AMIID: ami-62d35c02
+      AMIID: ami-1d668865
 
 Resources:
   ECSCluster:
@@ -58,6 +69,19 @@ Resources:
       MinSize: '1'
       MaxSize: !Ref 'MaxSize'
       DesiredCapacity: !Ref 'DesiredCapacity'
+      Tags:
+        - Key: app
+          Value: totem
+          PropagateAtLaunch: true
+        - Key: version
+          Value: !Ref StackVersion
+          PropagateAtLaunch: true
+        - Key: env
+          Value: !Ref Environment
+          PropagateAtLaunch: true
+        - Key: Name
+          Value: !Sub totem-${Environment}-${StackVersion}
+          PropagateAtLaunch: true
     CreationPolicy:
       ResourceSignal:
         Timeout: PT15M
@@ -71,15 +95,19 @@ Resources:
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
       SecurityGroups: !Ref 'EcsSecurityGroups'
       InstanceType: !Ref 'InstanceType'
-      IamInstanceProfile: !Ref 'InstanceProfile'
+      IamInstanceProfile:
+        Fn::ImportValue: !Sub "${EnvironmentStack}-InstanceProfile"
       KeyName: !Ref 'KeyName'
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
+          echo "Deploying totem stack: totem-${Environment}-${StackVersion}"
           echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
           yum install -y aws-cfn-bootstrap
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
 Outputs:
   ECSCluster:
     Value: !Ref 'ECSCluster'
+  ECSAutoScalingGroup:
+    Value: !Ref 'ECSAutoScalingGroup'
 

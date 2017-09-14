@@ -84,7 +84,11 @@ Resources:
 Outputs:
   ecsServiceRole:
     Value: !Ref 'ecsServiceRole'
+    Export:
+      Name: !Sub ${AWS::StackName}-ecsServiceRole
   HostRole:
     Value: !Ref 'HostRole'
   InstanceProfile:
     Value: !Ref 'InstanceProfile'
+    Export:
+      Name: !Sub ${AWS::StackName}-InstanceProfile
