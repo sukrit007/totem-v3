@@ -14,7 +14,7 @@ dashboard to view and manage application state.
 The provisioning guide and scripts for totem-v3 can be found in [provisioning](./provisioning) folder.
 
 ### Architecture
-The architecture reference for totem-v3 can be found at [architecture][./architecture]
+The architecture reference for totem-v3 can be found at [architecture](./architecture)
 
 
 ## Reporting Issues
