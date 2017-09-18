@@ -80,6 +80,12 @@ Resources:
       Roles:
         - !Ref 'HostRole'
 
+  TotemBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      Tags:
+        - Key: app
+          Value: totem
 
 Outputs:
   ecsServiceRole:
@@ -92,3 +98,7 @@ Outputs:
     Value: !Ref 'InstanceProfile'
     Export:
       Name: !Sub ${AWS::StackName}-InstanceProfile
+  TotemBucket:
+    Value: !Ref 'TotemBucket'
+    Export:
+      Name: !Sub ${AWS::StackName}-TotemBucket
