@@ -44,7 +44,7 @@ Parameters:
     Description: Version of the current stack
     Type: String
     MinLength: 1
-    Default: '1.0.0'
+    Default: '1.0.1'
 
   Environment:
     Description: Environment for the current stack (for tagging)
@@ -70,17 +70,11 @@ Resources:
       MaxSize: !Ref 'MaxSize'
       DesiredCapacity: !Ref 'DesiredCapacity'
       Tags:
-        - Key: app
-          Value: totem
-          PropagateAtLaunch: true
         - Key: version
           Value: !Ref StackVersion
           PropagateAtLaunch: true
-        - Key: env
-          Value: !Ref Environment
-          PropagateAtLaunch: true
         - Key: Name
-          Value: !Sub totem-${Environment}-${StackVersion}
+          Value: !Sub totem-v3-${Environment}-${StackVersion}
           PropagateAtLaunch: true
     CreationPolicy:
       ResourceSignal:
