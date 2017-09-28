@@ -1,0 +1,12 @@
+# This template sets up IAM roles/profiles and dependencies for ECS Cluster
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  TotemBucket:
+    Type: "AWS::S3::Bucket"
+
+Outputs:
+  TotemBucket:
+    Value: !Ref 'TotemBucket'
+    Export:
+      Name: !Sub ${AWS::StackName}-TotemBucket
