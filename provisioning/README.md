@@ -11,22 +11,62 @@
 ## Creating Global Resources
 
 Totem ECS cluster requires certain components to be created for all clusters.
-These are created automatically by spinning up cloudformation stack: [totem-environment](./totem-environment.yml).
+These are created automatically by spinning up cloudformation stack: [totem-global](./totem-global.yml).
 
 ```bash
 aws cloudformation deploy \
   --region=<aws-region> \
-  --template-file=./totem-environment.yml \
-  --stack-name=totem-environment \
+  --template-file=./totem-global.yml \
+  --stack-name=totem-global \
   --capabilities=CAPABILITY_NAMED_IAM
 ``` 
 *Note:* 
+- The global stack requires IAM capabilities to create instance profiles and service roles.
+- If the specified stack name already exists, the current stack will be updated.
+
+## Creating Environment Stack
+
+Environment stack is used to create environmental resources for the cluster that requires IAM capabilities like
+- instance role
+- service role
+
+These environment components can automatically by spinning up cloudformation stack: [totem-environment](./totem-environment.yml).
+
+```bash
+set -o pipefail
+PROFILE=[AWS_CLI_PROFILE]
+TOTEM_BUCKET="$(aws --profile=$PROFILE cloudformation describe-stack-resource \
+  --logical-resource-id=TotemBucket \
+  --stack-name=totem-global \
+  --output text | tail -1 | awk '{print $1}')" &&
+
+OUTPUT_TEMPLATE="$TOTEM_BUCKET/cloudformation/totem-environment.yml" && 
+
+aws --profile=$PROFILE s3 cp ./provisioning/totem-environment.yml s3://$OUTPUT_TEMPLATE &&
+
+aws --profile=$PROFILE cloudformation create-stack \
+  --template-url=https://s3.amazonaws.com/$OUTPUT_TEMPLATE \
+  --stack-name=totem-environment \
+  --capabilities=CAPABILITY_NAMED_IAM \
+  --tags \
+    "Key=app,Value=totem-v3" \
+    "Key=env,Value=development" \
+    "Key=client,Value=totem" \
+    "Key=stacktype,Value=totem-environment"
+```
+where:
+- **AWS_CLI_PROFILE**: [AWS CLI Profile](http://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html)
+
+*Note:* 
 - The environment stack requires IAM capabilities to create instance profiles and service roles.
 - If the specified stack name already exists, the current stack will be updated.
+- This step assumes that [global resources](#creating-global-resources) have already been created using totem global stack.  
 
 ## Bring up cluster
 
-*Note*: This step assumes that [global resources](#creating-global-resources) have already been created using environment stack. 
+*Note*: This step assumes that 
+- [global resources](#creating-global-resources) have already been created using global stack. 
+- [Environment Stack](#creating-environment-stack) have already been created using environment stack. 
 
 ```bash
 aws cloudformation deploy \
