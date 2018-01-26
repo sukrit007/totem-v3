@@ -80,7 +80,6 @@ Resources:
       Roles:
         - !Ref 'HostRole'
 
-
 Outputs:
   ecsServiceRole:
     Value: !Ref 'ecsServiceRole'
