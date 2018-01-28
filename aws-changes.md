@@ -24,3 +24,8 @@ Here is a list of all AWS announcements that will be relevant to totem-v3 archit
 - https://aws.amazon.com/about-aws/whats-new/2017/09/connect-your-git-repository-to-amazon-s3-and-aws-services-using-webhooks-and-new-quick-start/
 - https://aws.amazon.com/blogs/aws/new-network-load-balancer-effortless-scaling-to-millions-of-requests-per-second/
 - https://aws.amazon.com/about-aws/whats-new/2017/04/elastic-load-balancing-adds-support-for-host-based-routing-and-increased-rules-on-its-application-load-balancer/
+
+# Limitations
+
+## SAM and Cloudformation Deploy
+- Does not support YAML anchors. (Requires duplication for repeated properties)
