@@ -29,7 +29,7 @@ Here is a list of all AWS announcements that will be relevant to totem-v3 archit
 
 ## SAM and Cloudformation
 - Does not support YAML anchors. (Requires duplication for repeated properties)
-- If cloudformation deploy fails for first time, it can not be updated and needs to be deleted.
+- If cloudformation deploy fails for first time, it can not be updated and needs to be deleted. However, for ECS deploy via pipeline this might not be an issue with the recent announcement of AWS to support [ECS deploy directly as part of pipeline](https://aws.amazon.com/about-aws/whats-new/2017/12/aws-codepipeline-adds-support-for-amazon-ecs-and-aws-fargate/).
 
 ## Lamda Functions
 - Git web hook times out at times if it takes too long for lambda functions to warm up.
