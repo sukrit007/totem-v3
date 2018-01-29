@@ -33,3 +33,6 @@ Here is a list of all AWS announcements that will be relevant to totem-v3 archit
 
 ## Lamda Functions
 - Git web hook times out at times if it takes too long for lambda functions to warm up.
+
+## ECS
+- ELB can not be removed or added once service has been created
