@@ -42,4 +42,7 @@ Here is a list of all AWS announcements that will be relevant to totem-v3 archit
 
 ## Code Pipeline
 - Code pipeline is priced at $1 / active pipeline / month. Also every branch build in totem might require its own pipeline (Reason: A lot of information for pipeline can not be obtained at runtime and needs to be specified at time of creation of pipeline). With a lot of active branches, this model might get a little expensive. As of currently, pipelines created and destroyed in first 30 days are not charged.
-- Code Pipeline does not provide out of box Slack notifications. It does support SNS notification so we might have to build SNS-Lambda function for slack notifications
+- Code Pipeline does not provide out of the box Slack notifications. It does support SNS notification so we might have to build SNS-Lambda function for slack notifications
+
+## ALB
+- There is a hard limit of 25 certificates for ALB and 100 rules. This means we will need a pool of ALB for totem to deploy all our services. It might also require a logic to determine which ALB needs to be picked up for given service.
