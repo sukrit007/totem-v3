@@ -32,7 +32,14 @@ Here is a list of all AWS announcements that will be relevant to totem-v3 archit
 - If cloudformation deploy fails for first time, it can not be updated and needs to be deleted. However, for ECS deploy via pipeline this might not be an issue with the recent announcement of AWS to support [ECS deploy directly as part of pipeline](https://aws.amazon.com/about-aws/whats-new/2017/12/aws-codepipeline-adds-support-for-amazon-ecs-and-aws-fargate/).
 
 ## Lamda Functions
-- Git web hook times out at times if it takes too long for lambda functions to warm up.
+- Git web hook times out at if it takes too long for lambda functions to warm up. (AS far as possible to keep size of lambda function to minimal to reduce the warmup time)
 
-## ECS
+## ECS, Fargate, EKS
 - ELB can not be removed or added once service has been created
+- Fargate is not yet available in us-west-2 region.
+- EKS Preview access is not yet available.
+- ECS Services can not bound itself to multiple target groups of ALB. For services that uses multiple ports (health port, public port, private port) might have to be deployed twice.
+
+## Code Pipeline
+- Code pipeline is priced at $1 / active pipeline / month. Also every branch build in totem might require its own pipeline (Reason: A lot of information for pipeline can not be obtained at runtime and needs to be specified at time of creation of pipeline). With a lot of active branches, this model might get a little expensive. As of currently, pipelines created and destroyed in first 30 days are not charged.
+- Code Pipeline does not provide out of box Slack notifications. It does support SNS notification so we might have to build SNS-Lambda function for slack notifications
